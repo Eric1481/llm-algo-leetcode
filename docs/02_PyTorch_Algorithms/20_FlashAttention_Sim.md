@@ -112,57 +112,65 @@ def flash_attention_forward_sim(q, k, v, block_size=2, causal=False):
         raise ValueError('block_size 必须为正数')
 
     seq_len, dim = q.shape
-    
+
     # TODO 1: 初始化输出 O，全局最大值 m，全局指数和 l
-    # 提示: out 与 q 同 device、同 dtype，形状为 [seq_len, dim]；m/l 形状为 [seq_len, 1]
-    # out = ???；m = ???；l = ???；m 初始为 -inf，l 初始为 0。
-    # out = ???
-    # m = ???
-    # l = ???
-    
+    # m 初始为 -inf，保证第一个 K/V 分块的最大值一定成为新的全局最大值；
+    # l 初始为 0，表示尚未累加任何指数项。
+    out = torch.zeros((seq_len, dim), device=q.device, dtype=q.dtype)
+    m = torch.full((seq_len, 1), -float('inf'), device=q.device, dtype=q.dtype)
+    l = torch.zeros((seq_len, 1), device=q.device, dtype=q.dtype)
+
     scale = 1.0 / math.sqrt(dim)
-    
+
     # 外层循环：遍历 Q 的分块
     for i in range(0, seq_len, block_size):
         q_block = q[i:i+block_size] * scale
         m_i = m[i:i+block_size]
         l_i = l[i:i+block_size]
         out_i = out[i:i+block_size]
-        
+
         # 内层循环：遍历 K, V 的分块
         for j in range(0, seq_len, block_size):
             k_block = k[j:j+block_size]
             v_block = v[j:j+block_size]
-            
+
             # TODO 2: 计算当前 Q/K block 的缩放 score S_ij
-            # S_ij = (Q_i / sqrt(d)) @ K_j.T
-            # TODO 2a（可选 causal mask）：若 causal=True，屏蔽 key_pos > query_pos 的 score。
-            # 提示：query_pos = arange(i, ...)，key_pos = arange(j, ...)。
-            
+            # scale 已在外层乘进 q_block，这里不重复缩放。
+            S_ij = q_block @ k_block.transpose(-2, -1)
+            # TODO 2a（可选 causal mask）：屏蔽 key_pos > query_pos 的 score。
+            # 用全局 token 位置构造条件，置为 -inf 后其指数权重为 0。
+            if causal:
+                query_pos = torch.arange(i, i + q_block.shape[0], device=q.device)[:, None]
+                key_pos = torch.arange(j, j + k_block.shape[0], device=q.device)[None, :]
+                S_ij = S_ij.masked_fill(key_pos > query_pos, -float('inf'))
+
             # TODO 3: 计算当前块的局部最大值 m_block，并求出新的全局最大值 m_new
-            # m_block = ???；m_new = ???
             # m_new 是新的数值稳定基准；若 m_new 变化，旧 l_i 和 out_i 都必须重标定。
-            
+            m_block = torch.max(S_ij, dim=-1, keepdim=True)[0]
+            m_new = torch.maximum(m_i, m_block)
+
             # TODO 4: 计算尚未归一化的指数权重 exp_scores
-            # exp_scores = exp(S_ij - m_new)
-            
+            # 以 m_new 为基准做减法，避免 exp 溢出；这里还不是最终概率。
+            exp_scores = torch.exp(S_ij - m_new)
+
             # TODO 5: 计算当前块的局部指数和 l_block，并更新全局指数和 l_new
-            # l_block = ???
-            # l_new = ???
-            
+            # l_i * exp(m_i - m_new) 是把旧的指数和从旧基准 m_i 重标定到新基准 m_new。
+            l_block = torch.sum(exp_scores, dim=-1, keepdim=True)
+            l_new = l_i * torch.exp(m_i - m_new) + l_block
+
             # TODO 6: 更新输出 O_i（修正旧状态并累加当前 V block）
-            # out_i = ???
-            
+            # 第一项是重标定后的旧输出，第二项是当前块的贡献，二者都按 l_new 归一化。
+            out_i = out_i * (l_i * torch.exp(m_i - m_new) / l_new) + (exp_scores @ v_block) / l_new
+
             # 更新全局状态
-            # m_i = ???
-            # l_i = ???
-            pass
-        
+            m_i = m_new
+            l_i = l_new
+
         # 写回全局变量
-        # out[i:i+block_size] = ???
-        # m[i:i+block_size] = ???
-        # l[i:i+block_size] = ???
-            
+        out[i:i+block_size] = out_i
+        m[i:i+block_size] = m_i
+        l[i:i+block_size] = l_i
+
     return out
 
 ```
