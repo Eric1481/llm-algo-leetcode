@@ -1,15 +1,35 @@
-Issue #174 · Task4 · 多请求调度、异构 PD 与 Serving   GitHub ID: Eric1481   WeChat: 屠龙勇士
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/36_Decode_Scheduling.ipynb --mode question
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/36_Decode_Scheduling.ipynb --mode question
-  -- 36_Decode_Scheduling.ipynb: 17 assertions, 0 failures
+============================================================
+测试: 02_PyTorch_Algorithms/36_Decode_Scheduling.ipynb (题目区)
+============================================================
+
 ✅ DecodeSchedulerSim 测试通过
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/37_KV_Cache_Scheduling.ipynb --mode question
-  -- 37_KV_Cache_Scheduling.ipynb: 13 assertions, 0 failures
+
+✅ 02_PyTorch_Algorithms/36_Decode_Scheduling.ipynb 题目区测试通过
+
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/37_KV_Cache_Scheduling.ipynb --mode question
+D:\projects\llm-algo-leetcode\.venv\Lib\site-packages\nbformat\validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.
+  _validate(nbdict, ref, version, version_minor, relax_add_props)
+
+============================================================
+测试: 02_PyTorch_Algorithms/37_KV_Cache_Scheduling.ipynb (题目区)
+============================================================
+
 ✅ KVCacheSchedulerSim 测试通过
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/38_Prefill_Decode_Disaggregation.ipynb --mode question
-  -- 38_Prefill_Decode_Disaggregation.ipynb: 13 assertions, 0 failures
+
+✅ 02_PyTorch_Algorithms/37_KV_Cache_Scheduling.ipynb 题目区测试通过
+
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/38_Prefill_Decode_Disaggregation.ipynb --mode question
+
+============================================================
+测试: 02_PyTorch_Algorithms/38_Prefill_Decode_Disaggregation.ipynb (题目区)
+============================================================
+
 测试通过：PD 分离模板可以工作。
 
-D:\projects\llm-algo-leetcode>
+
+✅ 02_PyTorch_Algorithms/38_Prefill_Decode_Disaggregation.ipynb 题目区测试通过
+

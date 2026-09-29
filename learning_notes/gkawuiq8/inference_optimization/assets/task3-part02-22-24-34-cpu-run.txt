@@ -1,7 +1,11 @@
-Issue #166 · Task3 · KV Cache 状态与生命周期   GitHub ID: Eric1481   WeChat: 屠龙勇士
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/22_vLLM_PagedAttention.ipynb --mode question
+D:\projects\llm-algo-leetcode\.venv\Lib\site-packages\nbformat\validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.
+  _validate(nbdict, ref, version, version_minor, relax_add_props)
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/22_vLLM_PagedAttention.ipynb --mode question
-  -- 22_vLLM_PagedAttention.ipynb: 34 assertions, 0 failures
+============================================================
+测试: 02_PyTorch_Algorithms/22_vLLM_PagedAttention.ipynb (题目区)
+============================================================
+
 ✅ Prefix Cache 扩展测试通过！
 初始化内存池...
 ✅ Request 输入校验通过！
@@ -13,17 +17,37 @@ python tools/test_notebook_answers.py 02_PyTorch_Algorithms/22_vLLM_PagedAttenti
 ✅ Prefill 原子 OOM 测试通过！
 ✅ Decode OOM 回滚测试通过！
 ✅ KV Cache 账本与释放复用测试通过！
+
 ✅ All Tests Passed! PagedAttention 内存管理逻辑验证通过。
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/24_SGLang_RadixAttention.ipynb --mode question
-  -- 24_SGLang_RadixAttention.ipynb: 16 assertions, 0 failures
+
+✅ 02_PyTorch_Algorithms/22_vLLM_PagedAttention.ipynb 题目区测试通过
+
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/24_SGLang_RadixAttention.ipynb --mode question
+
+============================================================
+测试: 02_PyTorch_Algorithms/24_SGLang_RadixAttention.ipynb (题目区)
+============================================================
+
 ✅ 最长公共前缀计算正确！
 ✅ 多路径前缀命中选择正确！
 ✅ 前缀拆分与回退逻辑正确！
+
  所有测试通过：共享边、最长命中和 prompt 拆分逻辑正确。
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/34_Prefix_Caching_and_Chunked_Prefill.ipynb --mode question
-  -- 34_Prefix_Caching_and_Chunked_Prefill.ipynb: 14 assertions, 0 failures
+
+✅ 02_PyTorch_Algorithms/24_SGLang_RadixAttention.ipynb 题目区测试通过
+
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/34_Prefix_Caching_and_Chunked_Prefill.ipynb --mode question
+D:\projects\llm-algo-leetcode\.venv\Lib\site-packages\nbformat\validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.
+  _validate(nbdict, ref, version, version_minor, relax_add_props)
+
+============================================================
+测试: 02_PyTorch_Algorithms/34_Prefix_Caching_and_Chunked_Prefill.ipynb (题目区)
+============================================================
+
 ✅ PrefixCacheManager 测试通过
 
-D:\projects\llm-algo-leetcode>
+
+✅ 02_PyTorch_Algorithms/34_Prefix_Caching_and_Chunked_Prefill.ipynb 题目区测试通过
+

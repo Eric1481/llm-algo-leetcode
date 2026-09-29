@@ -1,31 +1,38 @@
-Issue #165 · Task2 · 单请求 Decode 与生成策略   GitHub ID: Eric1481   WeChat: 屠龙勇士
-
-python tools/test_notebook_answers.py 01_Hardware_Math_and_Systems/11_KV_Cache_and_Memory_Growth.ipynb --mode question
-  -- 11_KV_Cache_and_Memory_Growth.ipynb: 4 assertions, 0 failures
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/_nb11_ledger.py
 seq_len=1024 -> KV cache ≈  0.54 GB
 seq_len=2048 -> KV cache ≈  1.07 GB
 seq_len=4096 -> KV cache ≈  2.15 GB
 MHA: kv_heads=32, KV cache ≈  2.15 GB
 GQA: kv_heads= 8, KV cache ≈  0.54 GB
 MQA: kv_heads= 1, KV cache ≈  0.07 GB
-management -> {'pages': 32, 'waste_tokens': 0}
-representation -> {'base_kv_bytes': 2147483648, 'latent_bytes_proxy': 16777216, 'toy_representation_saving_ratio': 0.9922}
-✅ 分页参数校验通过
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/21_Decoding_Strategies.ipynb --mode question
-  -- 21_Decoding_Strategies.ipynb: 11 assertions, 0 failures
-原始 Logits (前10个单词): [0.10000000149011612, 2.299999952316284, 0.4000000059604645, 1.2000000476837158, -0.5, 4.0, 3.09999990
-46325684, 0.0, 1.100000023841858, -1.0]
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/21_Decoding_Strategies.ipynb --mode question
+
+============================================================
+测试: 02_PyTorch_Algorithms/21_Decoding_Strategies.ipynb (题目区)
+============================================================
+
+原始 Logits (前10个单词): [0.10000000149011612, 2.299999952316284, 0.4000000059604645, 1.2000000476837158, -0.5, 4.0, 3.0999999046325684, 0.0, 1.100000023841858, -1.0]
 ✅ Temperature 温度调节通过！
 ✅ Top-K 暴力截断通过！
 ✅ Top-p (Nucleus) 核采样动态截断通过！
 greedy: candidates=10, entropy=1.3310
 top_k: candidates=3, entropy=0.8889
 top_p: candidates=3, entropy=0.8889
+
 ✅ All Tests Passed! 解码策略实现通过测试。本次采样的下一个 token ID 是: 5
 
-python tools/test_notebook_answers.py 02_PyTorch_Algorithms/23_Speculative_Decoding.ipynb --mode question
-  -- 23_Speculative_Decoding.ipynb: 3 assertions, 0 failures
+
+✅ 02_PyTorch_Algorithms/21_Decoding_Strategies.ipynb 题目区测试通过
+
+D:\projects\llm-algo-leetcode>.\.venv\Scripts\python.exe -X utf8 tools/test_notebook_answers.py 02_PyTorch_Algorithms/23_Speculative_Decoding.ipynb --mode question
+
+============================================================
+测试: 02_PyTorch_Algorithms/23_Speculative_Decoding.ipynb (题目区)
+============================================================
+
 ✅ 测试通过！接受、residual correction 和 bonus token 均通过。
 
-D:\projects\llm-algo-leetcode>
+
+✅ 02_PyTorch_Algorithms/23_Speculative_Decoding.ipynb 题目区测试通过
+
