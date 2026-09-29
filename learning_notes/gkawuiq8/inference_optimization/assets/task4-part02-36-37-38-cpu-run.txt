@@ -1,27 +1,15 @@
-GitHub Issue #174
-推理优化 | 202609 Task4 · 多请求调度、异构 PD 与 Serving
-GitHub ID：Eric1481      微信群昵称：屠龙勇士      Part 02 · 36 Decode 调度  /  Part 02 · 37 KV Cache 调度  /  Part 02 · 38 Prefill / Decode 分离
+Issue #174 · Task4 · 多请求调度、异构 PD 与 Serving   GitHub ID: Eric1481   WeChat: 屠龙勇士
 
-Windows 10 Pro 10.0.19045  ·  Python 3.13.12  ·  PyTorch 2.14.0+cpu  ·  torch.cuda.is_available() = False  ·  12 线程
-证据等级：CPU 机制验证（全部实跑）。GPU / backend 单元未运行，相关结论在笔记中单独标注边界。
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/36_Decode_Scheduling.ipynb --mode question
+  -- 36_Decode_Scheduling.ipynb: 17 assertions, 0 failures
+✅ DecodeSchedulerSim 测试通过
 
-执行命令（仓库根目录 · 题目区回归）
-python tools/test_notebook_answers.py <notebook> --mode question
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/37_KV_Cache_Scheduling.ipynb --mode question
+  -- 37_KV_Cache_Scheduling.ipynb: 13 assertions, 0 failures
+✅ KVCacheSchedulerSim 测试通过
 
-每个 notebook：真实运行输出 + 断言统计
-36_Decode_Scheduling      断言 17 条全部通过
-  • ✅ DecodeSchedulerSim 测试通过
-  • GPU 微基准未启动：将 RUN_GPU_MICROBENCH 改为 True 后运行。
-37_KV_Cache_Scheduling      断言 13 条全部通过
-  • ✅ KVCacheSchedulerSim 测试通过
-  • GPU block probe 未启动：将 RUN_GPU_BLOCK_PROBE 改为 True 后运行。
-38_Prefill_Decode_Disaggregation      断言 13 条全部通过
-  • 测试通过：PD 分离模板可以工作。
-  • PD GPU/backend 预检未启动：将 RUN_PD_GPU_PREFLIGHT 改为 True 后运行。
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/38_Prefill_Decode_Disaggregation.ipynb --mode question
+  -- 38_Prefill_Decode_Disaggregation.ipynb: 13 assertions, 0 failures
+测试通过：PD 分离模板可以工作。
 
-本次实跑确认的结论
-  ✓ 请求级排序键 (phase_rank, cache_rank, -priority, total_len, request_id) 决定本轮选谁，wait_steps 只是观察量
-  ✓ 容量账本：容量 128 装 40+48+56 时发生驱逐，current_bytes 始终 ≤ capacity，堆中 stale 记录被识别
-  ✓ PD 分池计划覆盖且只覆盖每个请求一次；吞吐 +26 且 P95 −30ms 才 keep_split，延迟恶化时拒绝
-
-证据边界：CPU 机制验证。真实调度器的吞吐、排队与 P99 需要 Part 02 · 70 的并发 backend 实验，本截图不外推这些数字。
+D:\projects\llm-algo-leetcode>

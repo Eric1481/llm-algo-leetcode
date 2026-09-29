@@ -1,39 +1,31 @@
-GitHub Issue #165
-推理优化 | 202609 Task2 · 单请求 Decode 与生成策略
-GitHub ID：Eric1481      微信群昵称：屠龙勇士      Part 01 · 11 KV Cache 增长  /  Part 02 · 21 解码策略  /  Part 02 · 23 投机解码
+Issue #165 · Task2 · 单请求 Decode 与生成策略   GitHub ID: Eric1481   WeChat: 屠龙勇士
 
-Windows 10 Pro 10.0.19045  ·  Python 3.13.12  ·  PyTorch 2.14.0+cpu  ·  torch.cuda.is_available() = False  ·  12 线程
-证据等级：CPU 机制验证（全部实跑）。GPU / backend 单元未运行，相关结论在笔记中单独标注边界。
+python tools/test_notebook_answers.py 01_Hardware_Math_and_Systems/11_KV_Cache_and_Memory_Growth.ipynb --mode question
+  -- 11_KV_Cache_and_Memory_Growth.ipynb: 4 assertions, 0 failures
+seq_len=1024 -> KV cache ≈  0.54 GB
+seq_len=2048 -> KV cache ≈  1.07 GB
+seq_len=4096 -> KV cache ≈  2.15 GB
+MHA: kv_heads=32, KV cache ≈  2.15 GB
+GQA: kv_heads= 8, KV cache ≈  0.54 GB
+MQA: kv_heads= 1, KV cache ≈  0.07 GB
+management -> {'pages': 32, 'waste_tokens': 0}
+representation -> {'base_kv_bytes': 2147483648, 'latent_bytes_proxy': 16777216, 'toy_representation_saving_ratio': 0.9922}
+✅ 分页参数校验通过
 
-执行命令（仓库根目录 · 题目区回归）
-python tools/test_notebook_answers.py <notebook> --mode question
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/21_Decoding_Strategies.ipynb --mode question
+  -- 21_Decoding_Strategies.ipynb: 11 assertions, 0 failures
+原始 Logits (前10个单词): [0.10000000149011612, 2.299999952316284, 0.4000000059604645, 1.2000000476837158, -0.5, 4.0, 3.09999990
+46325684, 0.0, 1.100000023841858, -1.0]
+✅ Temperature 温度调节通过！
+✅ Top-K 暴力截断通过！
+✅ Top-p (Nucleus) 核采样动态截断通过！
+greedy: candidates=10, entropy=1.3310
+top_k: candidates=3, entropy=0.8889
+top_p: candidates=3, entropy=0.8889
+✅ All Tests Passed! 解码策略实现通过测试。本次采样的下一个 token ID 是: 5
 
-每个 notebook：真实运行输出 + 断言统计
-11_KV_Cache_and_Memory_Growth      断言 4 条全部通过
-  • seq_len=1024 -> KV cache ≈  0.54 GB
-  • seq_len=2048 -> KV cache ≈  1.07 GB
-  • seq_len=4096 -> KV cache ≈  2.15 GB
-  • MHA: kv_heads=32, KV cache ≈  2.15 GB
-  • GQA: kv_heads= 8, KV cache ≈  0.54 GB
-  • MQA: kv_heads= 1, KV cache ≈  0.07 GB
-  • management -> {'pages': 32, 'waste_tokens': 0}
-  • representation -> {'base_kv_bytes': 2147483648, 'latent_bytes_proxy': 16777216, 'toy_representation_saving_ratio': 0.9922}
-  • ✅ 分页参数校验通过
-21_Decoding_Strategies      断言 11 条全部通过
-  • 原始 Logits (前10个单词): [0.10000000149011612, 2.299999952316284, 0.4000000059604645, 1.2000000476837158, -0.5, 4.0, 3.0999999046325684, 0.0, 1.100000023841858, -1.0]
-  • ✅ Temperature 温度调节通过！
-  • ✅ Top-K 暴力截断通过！
-  • ✅ Top-p (Nucleus) 核采样动态截断通过！
-  • greedy: candidates=10, entropy=1.3310
-  • top_k: candidates=3, entropy=0.8889
-  • top_p: candidates=3, entropy=0.8889
-  • ✅ All Tests Passed! 解码策略实现通过测试。本次采样的下一个 token ID 是: 5
-23_Speculative_Decoding      断言 3 条全部通过
-  • ✅ 测试通过！接受、residual correction 和 bonus token 均通过。
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/23_Speculative_Decoding.ipynb --mode question
+  -- 23_Speculative_Decoding.ipynb: 3 assertions, 0 failures
+✅ 测试通过！接受、residual correction 和 bonus token 均通过。
 
-本次实跑确认的结论
-  ✓ KV Cache 账本随 seq_len / batch_size / 并发请求数线性增长：长 2 倍就是 2 倍，与 seq² 无关
-  ✓ 采样截断改变候选集合与熵：greedy 10 个候选、熵 1.3310；top_k / top_p 3 个候选、熵 0.8889
-  ✓ 投机解码一轮内完成接受 / 拒绝 / residual correction / bonus token，且 q=0 不误判
-
-证据边界：CPU 机制验证。真实 TTFT / TPOT / 接受率与加速比需要 GPU 上的 Part 02 · 66 / 68 backend 实验，本截图不外推这些数字。
+D:\projects\llm-algo-leetcode>

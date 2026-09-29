@@ -1,40 +1,29 @@
-GitHub Issue #166
-推理优化 | 202609 Task3 · KV Cache 状态与生命周期
-GitHub ID：Eric1481      微信群昵称：屠龙勇士      Part 02 · 22 vLLM PagedAttention  /  Part 02 · 24 SGLang RadixAttention  /  Part 02 · 34 Prefix Cache 与 Chunked Prefill
+Issue #166 · Task3 · KV Cache 状态与生命周期   GitHub ID: Eric1481   WeChat: 屠龙勇士
 
-Windows 10 Pro 10.0.19045  ·  Python 3.13.12  ·  PyTorch 2.14.0+cpu  ·  torch.cuda.is_available() = False  ·  12 线程
-证据等级：CPU 机制验证（全部实跑）。GPU / backend 单元未运行，相关结论在笔记中单独标注边界。
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/22_vLLM_PagedAttention.ipynb --mode question
+  -- 22_vLLM_PagedAttention.ipynb: 34 assertions, 0 failures
+✅ Prefix Cache 扩展测试通过！
+初始化内存池...
+✅ Request 输入校验通过！
+✅ Prefill 测试通过！Req1 分配的块表: [0, 1]
+✅ Decode 动态分配测试通过！Req1 最新块表: [0, 1, 2]
+✅ Cache 拼装测试通过！多块物理缓存被正确恢复为逻辑连续序列。
+✅ 边界分配与截断测试通过！
+✅ OOM 测试通过！
+✅ Prefill 原子 OOM 测试通过！
+✅ Decode OOM 回滚测试通过！
+✅ KV Cache 账本与释放复用测试通过！
+✅ All Tests Passed! PagedAttention 内存管理逻辑验证通过。
 
-执行命令（仓库根目录 · 题目区回归）
-python tools/test_notebook_answers.py <notebook> --mode question
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/24_SGLang_RadixAttention.ipynb --mode question
+  -- 24_SGLang_RadixAttention.ipynb: 16 assertions, 0 failures
+✅ 最长公共前缀计算正确！
+✅ 多路径前缀命中选择正确！
+✅ 前缀拆分与回退逻辑正确！
+ 所有测试通过：共享边、最长命中和 prompt 拆分逻辑正确。
 
-每个 notebook：真实运行输出 + 断言统计
-22_vLLM_PagedAttention      断言 34 条全部通过
-  • ✅ Prefix Cache 扩展测试通过！
-  • 初始化内存池...
-  • ✅ Request 输入校验通过！
-  • ✅ Prefill 测试通过！Req1 分配的块表: [0, 1]
-  • ✅ Decode 动态分配测试通过！Req1 最新块表: [0, 1, 2]
-  • ✅ Cache 拼装测试通过！多块物理缓存被正确恢复为逻辑连续序列。
-  • ✅ 边界分配与截断测试通过！
-  • ✅ OOM 测试通过！
-  • ✅ Prefill 原子 OOM 测试通过！
-  • ✅ Decode OOM 回滚测试通过！
-  • ✅ KV Cache 账本与释放复用测试通过！
-  • ✅ All Tests Passed! PagedAttention 内存管理逻辑验证通过。
-  • ✅ Prefix Cache 扩展测试通过！
-24_SGLang_RadixAttention      断言 16 条全部通过
-  • ✅ 最长公共前缀计算正确！
-  • ✅ 多路径前缀命中选择正确！
-  • ✅ 前缀拆分与回退逻辑正确！
-  •  所有测试通过：共享边、最长命中和 prompt 拆分逻辑正确。
-34_Prefix_Caching_and_Chunked_Prefill      断言 14 条全部通过
-  • ✅ PrefixCacheManager 测试通过
+python tools/test_notebook_answers.py 02_PyTorch_Algorithms/34_Prefix_Caching_and_Chunked_Prefill.ipynb --mode question
+  -- 34_Prefix_Caching_and_Chunked_Prefill.ipynb: 14 assertions, 0 failures
+✅ PrefixCacheManager 测试通过
 
-本次实跑确认的结论
-  ✓ 分页分配：长度 6 用 2 个 block，第 9 个 token 才加第 3 块；块表 [0,1,2] 拼回逻辑连续 (9,64)
-  ✓ OOM 原子性：Prefill 失败不留半分配块，Decode 失败回滚 seq_len；重复释放被明确拒绝
-  ✓ radix 树把公共前缀合并为共享边，最长命中 5 个 token；无命中返回 0 而不是部分匹配
-  ✓ 前缀缓存命中 3/4 token（reuse_ratio 0.75），只对 suffix 生成 chunk 计划
-
-证据边界：CPU 机制验证。真实 allocator 显存峰值、cache hit rate 与 TTFT 需要 Part 02 · 69 的 vLLM / SGLang backend 实验，本截图不外推这些数字。
+D:\projects\llm-algo-leetcode>
