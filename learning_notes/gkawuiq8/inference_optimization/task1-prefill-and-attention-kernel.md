@@ -1,8 +1,5 @@
 # Task1 · Prefill 与 Attention Kernel 学习笔记
-
-> 对应共学任务：[#147 llm-algo-leetcode 推理优化 | 202609 Task1 · Prefill 与 Attention Kernel](https://github.com/datawhalechina/llm-algo-leetcode/issues/147)
-> 打卡路线：4.1 + 4.2 + 4.3（全写）
-> 学习顺序：GPU 约束 → 访存与 Tiling → Prefill
+微信群昵称：屠龙勇士
 
 ## 0. 环境与运行证据
 
@@ -19,11 +16,11 @@
 
 ---
 
-## 4.1 最小打卡
+## 1. 总结
 
 对应课件：[Part 01 · 14 FlashAttention 显存模型](../../../01_Hardware_Math_and_Systems/14_FlashAttention_Memory_Model.ipynb)、[Part 02 · 20 FlashAttention 模拟](../../../02_PyTorch_Algorithms/20_FlashAttention_Sim.ipynb)
 
-### 4.1.1 FlashAttention 的思想：Prefill 到底被什么拖住了
+### 1.1 FlashAttention 的思想：Prefill 到底被什么拖住了
 
 先看基线。长度为 $N$ 的 prompt 做自注意力时，标准实现是三步：
 
@@ -52,7 +49,7 @@ def attention_score_bytes(seq_len, batch_size=1, num_heads=1, dtype_bytes=2):
 
 注意这里的 32 MiB 是**单头单 batch**。真实模型里要乘上 batch × num_heads，而且 $S$ 和 $P$ 都要落 HBM。$N$ 再翻一倍，$N^2$ 就是 4 倍。
 
-于是出现两件事（课件 `14` Q1 原文）：
+于是出现两件事：
 
 > - 中间结果占用的显存会迅速膨胀；
 > - 数据搬运会比计算本身更容易成为瓶颈。
@@ -63,7 +60,7 @@ def attention_score_bytes(seq_len, batch_size=1, num_heads=1, dtype_bytes=2):
 
 它是一个**精确**算法，不是近似（这一点课件 `14` 和 `20` 都反复强调）——输出和标准 Attention 在数值上等价，误差只来自浮点累加顺序。
 
-### 4.1.2 tiling 指什么
+### 1.2 tiling 指什么
 
 tiling 是"分块"：把 $Q$、$K$、$V$ 沿序列维度切成能放进片上高速存储的小块（tile），一次只把当前小块搬进片上做计算，算完的中间结果**不写回 HBM**。
 
@@ -103,7 +100,7 @@ def flashattention_working_set_bytes(tile_size, head_dim, dtype_bytes=2):
 
 注意 `flashattention_working_set_bytes(128, 128)` 算出来是 160 KB 这个量级——这正好是"能不能塞进一个 SM 的 shared memory"的问题，也是 4.2 要展开的硬件约束。
 
-### 4.1.3 online softmax 指什么
+### 1.3 online softmax 指什么
 
 **为什么单靠 tiling 不够。** 分块之后有一个直接的数学障碍：softmax 的分母需要**一整行的所有 score** 才能算：
 
